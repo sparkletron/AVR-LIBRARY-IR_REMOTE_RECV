@@ -81,6 +81,8 @@ void initIR(uint8_t pinNumber, uint16_t address, commandTemplate *commands)
 	PCMSK1 |= (1 << ir.pinNumber);
 
 	SREG = tmpSREG;
+
+	sei();
 }
 
 //checks for valid address and a valid command, if found returns command
