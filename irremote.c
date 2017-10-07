@@ -57,8 +57,13 @@ struct
 } ir;
 
 //will setup counters, and pin interrupt
-void initializeIR(uint8_t pinNumber, uint16_t address, commandTemplate *commands)
+void initIR(uint8_t pinNumber, uint16_t address, commandTemplate *commands)
 {
+	uint8_t tmpSREG = 0;
+
+	tmpSREG = SREG;
+	cli();
+
 	//setup initial values for IR_DATA
 	ir.receiverAddress = address;
 	ir.decodingStates = START;
@@ -74,7 +79,8 @@ void initializeIR(uint8_t pinNumber, uint16_t address, commandTemplate *commands
 	DDRC &= ~(1 << ir.pinNumber);
 	PCICR |= (1 << PCIE1);
 	PCMSK1 |= (1 << ir.pinNumber);
-	sei();
+
+	SREG = tmpSREG;
 }
 
 //checks for valid address and a valid command, if found returns command

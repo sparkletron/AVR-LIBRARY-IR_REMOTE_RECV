@@ -54,7 +54,7 @@ typedef struct
 } commandTemplate;
 
 // takes a 16 bit address that corresponds to the remote to be used (can be 8 or 16 bit), a uint8_t for pinNumber (0 to 5 on port c) and a struct of the remote codes
-void initializeIR(uint8_t pinNumber, uint16_t address, commandTemplate *commands);
+void initIR(uint8_t pinNumber, uint16_t address, commandTemplate *commands);
 //will return a enum commandAction that corresponds to the remote code.
 commandAction getIRCommandRec();
 
