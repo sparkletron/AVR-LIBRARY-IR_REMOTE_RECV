@@ -18,5 +18,6 @@ getIRCommandRec() : Will return a defined commandAction that matches the data ca
 Remotes:
 
 Adafruit Mini Remote Control PRODUCT ID: 389
+
 Amazon Remote from Almencla PRODUCT ID : 2b5a74350edc8f33c4ec8c0feae79775
 
