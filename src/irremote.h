@@ -25,37 +25,61 @@
  *
  *      Current Version: v0.3
  *      see implementation file for details
+ *
+ *      2019 modified by Hugo Schaaf v1.3
+ *          - added getIRCode function to only get the received code
+ *          - added the possibility to use GPIOs of PORTB or PORTC or PORTD as signal entry
+ *          - added the possibility to switch on the LED 13 on Arduino
+ *          - added signal input error detection to avoid to block the state machine
  */
 
 #ifndef IRREMOTE_H_
 #define IRREMOTE_H_
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*                      CONFIGURATION                            */ 
+/*                                                               */
+
+/* Select the remote signal entry GPIO port
+ * #define PORTTOUSE 'B' --> use GPIOs on PORTB as signal entry
+ * #define PORTTOUSE 'C' --> use GPIOs on PORTC as signal entry
+ * #define PORTTOUSE 'D' --> use GPIOs on PORTD as signal entry
+ */
+#define PORT_TO_USE     'B'
+
+/* Switch on led on PB5 (led 13) while receiving on Arduino UNO and NANO boards
+ * #define BLINK_LED 0 --> disable feature 
+ * #define BLINK_LED 1 --> enable feature
+ */
+#define BLINK_LED   1
+
+
 #ifndef COMMONTIMER_H_
-#warning "Make sure to use 100uS timer"
+    #warning "Make sure to use 100uS timer"
 #endif
 
 #include <inttypes.h>
+#include "remotes.h"
 
-//times for pulse length check (100 uS * 130 = 13 mS)
-#define AGC_BURST 130
-#define REPEAT_TIME 110
-#define ONES_TIME 20
-#define ZEROS_TIME 9
-#define PACKET_TIME 1150
+/* takes a 16 bit address that corresponds to the remote to be used (can be 8 or 16 bit),
+ * a uint8_t for pinNumber and a struct of the remote codes.
+ * If you want to only read codes with getIRCode(), give commands as NULL and a dummy uint16_t value
+ * as address. Then getIRCommandRec() will always return NO_ACTION and the parameter address will be ignored.
+ */
+void initIR(uint8_t pinNumber, uint16_t address, const CommandTemplate *commands);
 
-//enum actions for all remotes
-typedef enum {NO_ACTION, CMD_REPEAT, VOLUME_UP, VOLUME_DOWN, MUTE, INPUT1, INPUT2, INPUT3, INPUT4, PLAY_PAUSE, PREV, NEXT,
-CH_MINUS, CH_PLUS, STOP_MODE, SETUP, ENTER_SAVE, ZERO_TEN, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, REPEAT} commandAction;
+/* returns the received code, REPEAT_CODE if repeat code
+ * or NO_CODE if no code retreived
+ */
+#define NO_CODE     0x00000000UL
+#define REPEAT_CODE 0x00000001UL
 
-typedef struct
-{
-	uint8_t command;
-	commandAction action;
-} commandTemplate;
+uint32_t getIRCode(void);
 
-// takes a 16 bit address that corresponds to the remote to be used (can be 8 or 16 bit), a uint8_t for pinNumber (0 to 5 on port c) and a struct of the remote codes
-void initIR(uint8_t pinNumber, uint16_t address, commandTemplate *commands);
-//will return a enum commandAction that corresponds to the remote code.
-commandAction getIRCommandRec();
+/* returns commandAction that corresponds
+ * to the remote code.
+ * returns NO_ACTION if the code hasn't been found in commands or if commands == NULL
+ */
+CommandAction getIRCommandRec(void);
 
 #endif /* IRREMOTE_H_ */
