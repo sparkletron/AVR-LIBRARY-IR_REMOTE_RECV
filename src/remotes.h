@@ -5,7 +5,7 @@
  *      Author: John Convertino
  *      email: electrobs@gmail.com
  *
-    Copyright (C) 2014 John Convertino
+    Copyright (C) 2014 John Convertino/dev/ttyS1
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,22 +20,61 @@
     You should have received a copy of the GNU General Public License along
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+
+    2019 modified by Hugo Schaaf
+        - Added amazon remote mapping
+        - Moved commandAction and commandTemplate from irremote.h to here
+
  */
 
 #ifndef REMOTES_H_
 #define REMOTES_H_
 
-#include "irremote.h"
+#include <inttypes.h>
 
-//all remotes must end with {something, NO_ACTION}
+/* List of possible actions
+ * You can add your custom actions
+ */
+typedef enum
+{
+    NO_ACTION, CMD_REPEAT, ARROW_UP, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, VOLUME_UP, VOLUME_DOWN, MUTE,
+    INPUT1, INPUT2, INPUT3, INPUT4, PLAY_PAUSE, PREV, NEXT, CH_MINUS, CH_PLUS, STOP_MODE, SETUP, OK,
+    ENTER_SAVE, ZERO, ZERO_TEN, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, HASH, TIMES, REPEAT
+} CommandAction;
 
-//ADAFRUIT_REMOTE
-#define ADAFRUIT_ADDRESS 0xBF00
-commandTemplate ADAFRUIT_REMOTE[] = {{0x02, VOLUME_UP}, {0x00, VOLUME_DOWN},
-{0x01, PLAY_PAUSE}, {0x04, SETUP}, {0x05, PREV}, {0x06, STOP_MODE},
-{0x08, CH_MINUS}, {0x09, ENTER_SAVE}, {0x0A, CH_PLUS}, {0x0C, ZERO_TEN},
-{0x0D, NEXT}, {0x0E, REPEAT}, {0x10, ONE}, {0x11, TWO}, {0x12, THREE},
-{0x14, FOUR}, {0x15, FIVE}, {0x16, SIX}, {0x18, SEVEN},
-{0x19, EIGHT}, {0x1A, NINE}, {0xFF, NO_ACTION}};
+
+/* commandTemplate structure */
+typedef struct
+{
+    uint8_t command;
+    CommandAction action;
+} CommandTemplate;
+
+/* List of remotes
+ * all remotes must end with {something, NO_ACTION}
+ * You can add your custom remotes following the rule above and giving
+ * the 8 bits non-inverted corresponding code.
+ */
+
+/* ADAFRUIT REMOTE */
+extern CommandTemplate ADAFRUIT_REMOTE[];
+#define ADAFRUIT_ADDRESS    0xBF00
+
+/* AMAZON UNKNOWN REMOTE
+ *  ___________
+ *  | 1  2  3 |
+ *  | 4  5  6 |
+ *  | 7  8  9 |
+ *  | *  0  # |
+ *  |    ▲    |
+ *  | ◄  OK ► |
+ *  |    ▼    |
+ *  |_________|
+ */ 
+extern CommandTemplate AMAZON_REMOTE[];
+#define AMAZON_ADDRESS      0x0000
+
 
 #endif /* REMOTES_H_ */
+
