@@ -17,3 +17,7 @@ Remotes:
 
 Adafruit Mini Remote Control PRODUCT ID: 389
 
+#TODO
+
+FIX a bug... repeats from other remotes cause issues... not sure why, need to put this into waveforms and look at what data the other remotes put out vs the original.
+
