@@ -50,8 +50,8 @@ CH_MINUS, CH_PLUS, STOP_MODE, SETUP, ENTER_SAVE, ZERO_TEN, ONE, TWO, THREE, FOUR
 
 typedef struct
 {
-	uint8_t command;
-	commandAction action;
+  uint8_t command;
+  commandAction action;
 } commandTemplate;
 
 // takes a 16 bit address that corresponds to the remote to be used (can be 8 or 16 bit), a uint8_t for pinNumber (0 to 5 on port c) and a struct of the remote codes
